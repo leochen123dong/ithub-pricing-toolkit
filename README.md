@@ -1,6 +1,6 @@
 # ITHub管理服务计价工具包
 
-宜鼎（InnoDisk）ITHub 管理服务的工具集合。全部使用 HTML / CSS / JavaScript 单文件实现，无外部依赖，浏览器直接打开即可使用。
+ITHub 管理服务的工具集合。全部使用 HTML / CSS / JavaScript 单文件实现，无外部依赖，浏览器直接打开即可使用。
 
 ## 文件清单
 
@@ -47,7 +47,7 @@ git push                         # 推送到 GitHub
 
 ## 项目信息
 
-- **客户**：宜鼎 InnoDisk
+- **客户**：见合同
 - **项目**：FY27 服务交付
 - **维护**：Richard
 - **仓库**：<https://github.com/leochen123dong/ithub-pricing-toolkit>（Private）
