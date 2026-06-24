@@ -1,0 +1,25 @@
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Office lock / temp files
+~$.*
+~$*
+*.tmp
+
+# Large media — not source code
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.pptx
+*.ppt
+*.key
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

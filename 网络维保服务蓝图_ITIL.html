@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网络维保服务蓝图（基于ITIL 4）</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background-color: #f4f7fc;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #1a237e;
+            margin-bottom: 6px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #5c6bc0;
+            font-size: 0.95em;
+            margin-bottom: 20px;
+        }
+        .blueprint-container {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .blueprint-swimlane-table {
+            width: 100%;
+            min-width: 1700px;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        .blueprint-swimlane-table th, .blueprint-swimlane-table td {
+            border: 1px solid #ddd;
+            padding: 15px;
+            vertical-align: top;
+        }
+        .blueprint-swimlane-table thead th {
+            background-color: #3f51b5;
+            color: white;
+            font-size: 1.2em;
+            padding: 20px 15px;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+        .blueprint-swimlane-table .swimlane-header {
+            background-color: #e8eaf6;
+            font-weight: bold;
+            text-align: right;
+            width: 180px;
+            color: #1a237e;
+            position: sticky;
+            left: 0;
+            z-index: 1;
+        }
+        .blueprint-swimlane-table tbody tr:hover .swimlane-header {
+            background-color: #c5cae9;
+        }
+        .blueprint-swimlane-table td ul {
+            margin: 0;
+            padding-left: 18px;
+            line-height: 1.6;
+        }
+        .blueprint-swimlane-table td li {
+            margin-bottom: 5px;
+        }
+        .line-of-visibility {
+            border-top: 4px dashed #ff5722;
+        }
+        .itil-tag {
+            display: inline-block;
+            background: #e8eaf6;
+            color: #1a237e;
+            font-size: 0.75em;
+            padding: 1px 6px;
+            border-radius: 8px;
+            margin-left: 4px;
+            font-weight: normal;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>网络维保服务蓝图</h1>
+    <div class="subtitle">基于ITIL 4 服务价值体系（SVS）/ 服务价值链（SVC）设计</div>
+
+    <div class="blueprint-container">
+        <table class="blueprint-swimlane-table">
+            <thead>
+                <tr>
+                    <th style="width: 180px; position: sticky; left: 0; z-index: 3;">服务环节</th>
+                    <th>阶段一：服务规划与设计<br><small style="font-weight:normal;opacity:0.85;">Plan &amp; Design</small></th>
+                    <th>阶段二：日常监控与预防性维护<br><small style="font-weight:normal;opacity:0.85;">Deliver &amp; Support</small></th>
+                    <th>阶段三：故障响应与处置<br><small style="font-weight:normal;opacity:0.85;">Incident Management</small></th>
+                    <th>阶段四：问题分析与持续改进<br><small style="font-weight:normal;opacity:0.85;">Problem &amp; CSI</small></th>
+                    <th>阶段五：服务评审与沟通<br><small style="font-weight:normal;opacity:0.85;">Engage &amp; SLM</small></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="swimlane-header">物理凭证</td>
+                    <td><ul>
+                        <li><strong>《维保服务合同（SOW）》</strong></li>
+                        <li>《SLA服务等级协议》<span class="itil-tag">SLM</span></li>
+                        <li>《网络服务目录》<span class="itil-tag">Catalogue</span></li>
+                        <li>网络资产清单 / CMDB初始数据</li>
+                        <li>联系人与升级路径文档</li>
+                        <li>服务启动确认函</li>
+                    </ul></td>
+                    <td><ul>
+                        <li>网络运维监控大屏（可用性/性能）</li>
+                        <li>每日健康巡检报告</li>
+                        <li>配置与拓扑自动备份包</li>
+                        <li>月度预防性维护计划与执行表</li>
+                        <li>性能基线 / 容量趋势报告</li>
+                    </ul></td>
+                    <td><ul>
+                        <li>故障工单（含SLA计时）<span class="itil-tag">Incident</span></li>
+                        <li>告警通知（短信/邮件/IM）</li>
+                        <li>应急响应方案 / Runbook</li>
+                        <li>备件清单与到货记录</li>
+                        <li>故障处置过程纪要</li>
+                    </ul></td>
+                    <td><ul>
+                        <li>问题工单 / Known Error DB<span class="itil-tag">Problem</span></li>
+                        <li>《根因分析（RCA）报告》</li>
+                        <li>变更请求 RFC 与变更记录<span class="itil-tag">Change</span></li>
+                        <li>网络优化 / 架构改进建议</li>
+                        <li>知识库更新条目</li>
+                    </ul></td>
+                    <td><ul>
+                        <li><strong>《网络维保月度运行报告》</strong></li>
+                        <li><strong>《网络维保季度服务评审报告》</strong></li>
+                        <li><strong>《网络维保年度总结报告》</strong></li>
+                        <li>客户满意度调查表</li>
+                        <li>服务例会会议纪要</li>
+                    </ul></td>
+                </tr>
+                <tr>
+                    <td class="swimlane-header">客户行为</td>
+                    <td><ul>
+                        <li>提供网络拓扑与资产信息</li>
+                        <li>确认维保范围与SLA条款</li>
+                        <li>指派接口人与决策人</li>
+                        <li>参加服务启动会</li>
+                        <li>授权监控/远程接入</li>
+                    </ul></td>
+                    <td><ul>
+                        <li>查看运维监控大屏</li>
+                        <li>接收每日巡检推送</li>
+                        <li>审批预防性维护窗口</li>
+                        <li>(被动)接收容量预警</li>
+                    </ul></td>
+                    <td><ul>
+                        <li>电话/工单报障</li>
+                        <li>提供故障现场描述</li>
+                        <li>配合远程或现场支持</li>
+                        <li>确认业务恢复结果</li>
+                        <li>参与重大事件升级决策</li>
+                    </ul></td>
+                    <td><ul>
+                        <li>参与 RCA 复盘讨论</li>
+                        <li>提供业务影响背景</li>
+                        <li>审批变更窗口与风险</li>
+                        <li>反馈改进落地效果</li>
+                    </ul></td>
+                    <td><ul>
+                        <li>审阅月/季/年服务报告</li>
+                        <li>参加服务评审例会</li>
+                        <li>提交满意度反馈</li>
+                        <li>对优化建议进行决策</li>
+                    </ul></td>
+                </tr>
+                <tr>
+                    <td class="swimlane-header">前台行为<br><small>(客户可见)</small></td>
+                    <td><ul>
+                        <li>召开服务启动会（Kick-off）</li>
+                        <li>讲解服务目录与SLA</li>
+                        <li>收集网络资产与配置信息</li>
+                        <li>沟通监控接入与权限</li>
+                        <li>提交《维保服务方案》</li>
+                    </ul></td>
+                    <td><ul>
+                        <li>开放运维监控大屏访问</li>
+                        <li>推送每日巡检与维护提醒</li>
+                        <li>按月交付预防性维护报告</li>
+                        <li>主动通报容量与性能风险</li>
+                    </ul></td>
+                    <td><ul>
+                        <li>一线服务台 7x24 接听/响应</li>
+                        <li>二线/三线工程师介入处置</li>
+                        <li>持续通报处置进度</li>
+                        <li>重大事件即时升级与通报</li>
+                        <li>交付故障处置与回执确认</li>
+                    </ul></td>
+                    <td><ul>
+                        <li>组织 RCA 复盘会</li>
+                        <li>提交根因分析与改进建议</li>
+                        <li>提交 RFC 推动变更落地</li>
+                        <li>通报 Known Error 与规避措施</li>
+                    </ul></td>
+                    <td><ul>
+                        <li>准时交付月/季/年服务报告</li>
+                        <li>组织并主持服务评审会</li>
+                        <li>解读 SLA 达成与改进项</li>
+                        <li>收集并回应客户反馈</li>
+                    </ul></td>
+                </tr>
+                <tr class="line-of-visibility">
+                    <td class="swimlane-header">后台行为<br><small>(客户不可见)</small></td>
+                    <td><ul>
+                        <li>搭建 CMDB 网络资产库<span class="itil-tag">CMDB</span></li>
+                        <li>评估网络架构与可用性</li>
+                        <li>定义监控策略与告警阈值</li>
+                        <li>建立性能基线</li>
+                        <li>编制服务目录与服务请求模板</li>
+                    </ul></td>
+                    <td><ul>
+                        <li>7x24 监控网络可用性与性能<span class="itil-tag">Monitoring</span></li>
+                        <li>定期配置备份与版本管理</li>
+                        <li>执行预防性维护（巡检、补丁）</li>
+                        <li>容量与性能趋势分析<span class="itil-tag">Capacity</span></li>
+                        <li>生成每日巡检与基线偏差报告</li>
+                    </ul></td>
+                    <td><ul>
+                        <li>分诊、定级、启动 SLA 计时器</li>
+                        <li>L1 远程恢复 / L2 深度处置 / L3 厂商协同</li>
+                        <li>启动应急方案与备件调度</li>
+                        <li>记录处置过程与恢复时间</li>
+                        <li>关闭工单并归档事件证据</li>
+                    </ul></td>
+                    <td><ul>
+                        <li>跨事件根因聚合分析</li>
+                        <li>识别趋势性 / 隐患性问题</li>
+                        <li>建立 Known Error 与规避方案<span class="itil-tag">KEDB</span></li>
+                        <li>起草 RFC 推动架构/配置变更</li>
+                        <li>沉淀知识条目并更新知识库</li>
+                    </ul></td>
+                    <td><ul>
+                        <li>从各系统导出运维数据</li>
+                        <li>统计 SLA 达成率、MTTR、MTBF</li>
+                        <li>分析指标偏差与服务趋势</li>
+                        <li>撰写报告与下期改进建议</li>
+                        <li>准备评审会材料与议程</li>
+                    </ul></td>
+                </tr>
+                <tr>
+                    <td class="swimlane-header">支持流程<br><small>(ITIL 实践)</small></td>
+                    <td><ul>
+                        <li>服务战略 &amp; 服务目录管理</li>
+                        <li>SLA / 服务级别管理 (SLM)</li>
+                        <li>配置管理 (CMDB)</li>
+                        <li>架构 &amp; 可用性管理</li>
+                        <li>供应商管理（设备厂商）</li>
+                    </ul></td>
+                    <td><ul>
+                        <li>监控与事件管理 (Monitoring &amp; Event Mgmt)</li>
+                        <li>服务请求管理 (变更类除外)</li>
+                        <li>容量与性能管理</li>
+                        <li>发布 / 备份与恢复管理</li>
+                        <li>基础设施与平台管理</li>
+                    </ul></td>
+                    <td><ul>
+                        <li>事件管理 (Incident Mgmt)</li>
+                        <li>事件响应 Runbook / SOP</li>
+                        <li>服务台 (Service Desk)</li>
+                        <li>应急与备件管理</li>
+                        <li>重大事件管理 (Major Incident)</li>
+                    </ul></td>
+                    <td><ul>
+                        <li>问题管理 (Problem Mgmt)</li>
+                        <li>变更管理 (Change Mgmt)</li>
+                        <li>知识管理 (Knowledge Mgmt)</li>
+                        <li>持续改进 (CSI)</li>
+                        <li>风险登记册管理</li>
+                    </ul></td>
+                    <td><ul>
+                        <li>服务水平管理 (SLM)</li>
+                        <li>关系管理 / 供应商管理</li>
+                        <li>持续改进 (CSI) 评审</li>
+                        <li>度量与报告 (Metrics &amp; Reporting)</li>
+                        <li>服务价值链 — Engage</li>
+                    </ul></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

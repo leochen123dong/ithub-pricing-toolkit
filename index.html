@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ITHub管理服务计价工具包</title>
+<style>
+    :root {
+        --primary-dark: #1a237e;
+        --primary: #3f51b5;
+        --primary-light: #5c6bc0;
+        --bg: #f4f7fc;
+        --line: #ddd;
+    }
+    * { box-sizing: border-box; }
+    body {
+        font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        background-color: var(--bg);
+        color: #333;
+        margin: 0;
+        padding: 40px 20px;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 40px; }
+    h1 {
+        color: var(--primary-dark);
+        margin: 0 0 8px 0;
+        font-size: 2em;
+    }
+    .subtitle {
+        color: var(--primary-light);
+        font-size: 1em;
+    }
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+    }
+    .card {
+        display: block;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 28px 24px;
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.15s;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(63,81,181,0.15);
+        border-color: var(--primary);
+    }
+    .card-icon { font-size: 2.4em; margin-bottom: 12px; }
+    .card-title {
+        font-size: 1.15em;
+        font-weight: 600;
+        color: var(--primary-dark);
+        margin-bottom: 8px;
+    }
+    .card-desc {
+        font-size: 0.9em;
+        color: #666;
+        line-height: 1.5;
+    }
+    footer {
+        text-align: center;
+        margin-top: 40px;
+        color: #999;
+        font-size: 0.85em;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>ITHub管理服务计价工具包</h1>
+        <div class="subtitle">宜鼎 · FY27 服务交付工具集合</div>
+    </header>
+
+    <div class="grid">
+        <a href="网络维保服务蓝图_ITIL.html" class="card">
+            <div class="card-icon">📋</div>
+            <div class="card-title">网络维保服务蓝图</div>
+            <div class="card-desc">基于ITIL 4服务价值体系设计的5×5泳道蓝图，呈现物理凭证、客户行为、前台、后台、支撑流程的完整服务链条</div>
+        </a>
+        <a href="网络维保计费表.html" class="card">
+            <div class="card-icon">💰</div>
+            <div class="card-title">IT运维服务计费表</div>
+            <div class="card-desc">覆盖15大类90+设备类型，类型库可在线编辑；数量、单价、折扣、税率全部联动计算，支持CSV导出</div>
+        </a>
+        <a href="tenant_health.html" class="card">
+            <div class="card-icon">🏥</div>
+            <div class="card-title">租户健康度</div>
+            <div class="card-desc">租户健康度检查工具</div>
+        </a>
+    </div>
+
+    <footer>
+        最后更新：2026-06-24　|　维护：Richard　|　客户：宜鼎 InnoDisk
+    </footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>租户健康报告 — ciscoinnovation1</title>
+<style>
+  :root { --bg:#0b1220; --panel:#111827; --line:#1f2937;
+          --text:#e5e7eb; --muted:#94a3b8; --accent:#38bdf8; }
+  * { box-sizing:border-box }
+  body { margin:0; padding:32px; background:var(--bg); color:var(--text);
+         font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Roboto,sans-serif;
+         line-height:1.5; }
+  h1 { margin:0 0 4px 0; font-size:24px }
+  h2 { font-size:16px; margin:24px 0 8px 0; color:var(--accent);
+        border-left:3px solid var(--accent); padding-left:10px }
+  .sub { color:var(--muted); font-size:13px }
+  .header { display:flex; justify-content:space-between; align-items:center;
+             padding:18px 24px; background:var(--panel); border:1px solid var(--line);
+             border-radius:10px; margin-bottom:24px; gap:20px; }
+  .verdict { display:inline-block; padding:8px 18px; border-radius:999px;
+              font-weight:700; letter-spacing:1px; background:#dc2626;
+              color:#fff; font-size:14px; white-space:nowrap; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:14px; }
+  .kpi { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:16px }
+  .kpi .v { font-size:30px; font-weight:700 }
+  .kpi .l { color:var(--muted); font-size:12px; margin-top:4px }
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:10px;
+            padding:18px; margin-bottom:18px; }
+  table { width:100%; border-collapse:collapse; font-size:13px }
+  th, td { padding:8px 10px; border-bottom:1px solid var(--line); text-align:left }
+  th { color:var(--muted); font-weight:600; font-size:11px;
+        text-transform:uppercase; letter-spacing:0.5px }
+  td.num, th.num { text-align:right; font-variant-numeric:tabular-nums }
+  td.pct { width:60px; color:var(--muted); text-align:right }
+  .dot { display:inline-block; width:10px; height:10px; border-radius:50%;
+          margin-right:6px; vertical-align:middle }
+  .bar { background:#0f172a; border-radius:6px; overflow:hidden; height:10px; min-width:120px }
+  .bar-fill { height:100%; }
+  .chip { display:inline-block; padding:2px 8px; border-radius:999px; color:#fff;
+           font-size:11px; margin:2px 4px 2px 0; font-weight:600 }
+  .kpi-card { background:var(--panel); border:1px solid var(--line); border-radius:10px;
+               padding:14px; text-align:center }
+  .kpi-num { font-size:26px; font-weight:700 }
+  .kpi-lbl { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:0.5px }
+  .footer { color:var(--muted); font-size:11px; margin-top:30px; text-align:right }
+  code { background:#0f172a; padding:2px 6px; border-radius:4px; font-size:12px }
+  .pri { display:inline-block; padding:2px 8px; border-radius:4px; color:#fff;
+         font-size:10px; font-weight:700; letter-spacing:0.5px;
+         margin-right:8px; vertical-align:middle }
+  .pri.p0 { background:#7f1d1d } .pri.p1 { background:#dc2626 }
+  .pri.p2 { background:#f59e0b } .pri.p3 { background:#0ea5e9 }
+  .rec { background:var(--panel); border:1px solid var(--line); border-radius:10px;
+         padding:16px 18px; margin-bottom:12px; border-left:4px solid var(--accent); }
+  .rec h3 { margin:0 0 6px 0; font-size:14px; color:var(--text) }
+  .rec .meta { color:var(--muted); font-size:12px; margin-bottom:8px }
+  .rec ul { margin:6px 0 0 0; padding-left:20px; font-size:13px; line-height:1.7 }
+  .rec li { margin-bottom:4px }
+  .rec .impact { color:#fbbf24; font-weight:600 }
+  .summary { background:linear-gradient(135deg,#1e293b,#0f172a);
+             border:1px solid var(--line); border-radius:10px;
+             padding:18px 22px; margin-bottom:18px; }
+  .summary h3 { margin:0 0 10px 0; font-size:14px; color:var(--accent) }
+  .summary ol { margin:0; padding-left:20px; font-size:13px; line-height:1.7 }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>租户健康报告 — <code>ciscoinnovation1</code> <small>(CiscoInnovation1)</small></h1>
+    <div class="sub">生成时间: 2026-06-24 01:41:02 UTC &nbsp;|&nbsp; 数据源: Logicalis Service API (demo)</div>
+  </div>
+  <div class="verdict">DEGRADED</div>
+</div>
+
+<h2>总体概览</h2>
+<div class="grid">
+  <div class="kpi"><div class="v">49</div><div class="l">受监控设备</div></div>
+  <div class="kpi"><div class="v" style="color:#16a34a">11</div><div class="l">Normal 健康 (22.4%)</div></div>
+  <div class="kpi"><div class="v" style="color:#7f1d1d">0</div><div class="l">Critical</div></div>
+  <div class="kpi"><div class="v" style="color:#dc2626">7</div><div class="l">Major</div></div>
+  <div class="kpi"><div class="v" style="color:#94a3b8">4</div><div class="l">Unreachable</div></div>
+  <div class="kpi"><div class="v" style="color:#475569">11</div><div class="l">Unmanaged</div></div>
+  <div class="kpi"><div class="v" style="color:#0ea5e9">2</div><div class="l">SSL 监测设备 (2 启用)</div></div>
+</div>
+
+<h2>设备状态分布</h2>
+<div class="panel">
+  <table>
+    <thead><tr><th>严重级别</th><th class="num">设备数</th><th class="pct">%</th><th>分布</th></tr></thead>
+    <tbody><tr><td><span class="dot" style="background:#16a34a"></span> Normal <small>(0)</small></td><td class="num">11</td><td class="pct">22.4%</td><td><div class="bar"><div class="bar-fill" style="width:22.4%;background:#16a34a"></div></div></td></tr><tr><td><span class="dot" style="background:#0ea5e9"></span> Informational <small>(1)</small></td><td class="num">1</td><td class="pct">2.0%</td><td><div class="bar"><div class="bar-fill" style="width:2.0%;background:#0ea5e9"></div></div></td></tr><tr><td><span class="dot" style="background:#eab308"></span> Warning <small>(2)</small></td><td class="num">3</td><td class="pct">6.1%</td><td><div class="bar"><div class="bar-fill" style="width:6.1%;background:#eab308"></div></div></td></tr><tr><td><span class="dot" style="background:#f97316"></span> Minor <small>(3)</small></td><td class="num">12</td><td class="pct">24.5%</td><td><div class="bar"><div class="bar-fill" style="width:24.5%;background:#f97316"></div></div></td></tr><tr><td><span class="dot" style="background:#dc2626"></span> Major <small>(4)</small></td><td class="num">7</td><td class="pct">14.3%</td><td><div class="bar"><div class="bar-fill" style="width:14.3%;background:#dc2626"></div></div></td></tr><tr><td><span class="dot" style="background:#94a3b8"></span> Unreachable <small>(7)</small></td><td class="num">4</td><td class="pct">8.2%</td><td><div class="bar"><div class="bar-fill" style="width:8.2%;background:#94a3b8"></div></div></td></tr><tr><td><span class="dot" style="background:#475569"></span> Unmanaged <small>(8)</small></td><td class="num">11</td><td class="pct">22.4%</td><td><div class="bar"><div class="bar-fill" style="width:22.4%;background:#475569"></div></div></td></tr></tbody>
+  </table>
+</div>
+
+<h2>24h 告警汇总</h2>
+<div class="grid"><div class="kpi-card"><div class="kpi-num" style="color:#0ea5e9">1</div><div class="kpi-lbl">Informational</div></div><div class="kpi-card"><div class="kpi-num" style="color:#eab308">0</div><div class="kpi-lbl">Warning</div></div><div class="kpi-card"><div class="kpi-num" style="color:#f97316">0</div><div class="kpi-lbl">Minor</div></div><div class="kpi-card"><div class="kpi-num" style="color:#dc2626">0</div><div class="kpi-lbl">Major</div></div><div class="kpi-card"><div class="kpi-num" style="color:#7f1d1d">0</div><div class="kpi-lbl">Critical</div></div></div>
+<div class="sub" style="margin-top:8px">峰值小时: H+6h (共 1 条告警)</div>
+
+<h2>区域 (Region) 状态</h2>
+<div class="panel">
+  <table>
+    <thead><tr><th>区域</th><th class="num">设备数</th><th>严重级别分布</th></tr></thead>
+    <tbody><tr><td>上海</td><td class="num">11</td><td><span class="chip" style="background:#16a34a">Normal: 2</span> <span class="chip" style="background:#eab308">Warning: 1</span> <span class="chip" style="background:#f97316">Minor: 1</span> <span class="chip" style="background:#dc2626">Major: 4</span> <span class="chip" style="background:#475569">Unmanaged: 3</span></td></tr><tr><td>苏州</td><td class="num">13</td><td><span class="chip" style="background:#16a34a">Normal: 3</span> <span class="chip" style="background:#eab308">Warning: 2</span> <span class="chip" style="background:#f97316">Minor: 2</span> <span class="chip" style="background:#dc2626">Major: 2</span> <span class="chip" style="background:#94a3b8">Unreachable: 2</span> <span class="chip" style="background:#475569">Unmanaged: 2</span></td></tr><tr><td>广州</td><td class="num">20</td><td><span class="chip" style="background:#16a34a">Normal: 5</span> <span class="chip" style="background:#0ea5e9">Informational: 1</span> <span class="chip" style="background:#f97316">Minor: 7</span> <span class="chip" style="background:#94a3b8">Unreachable: 1</span> <span class="chip" style="background:#475569">Unmanaged: 6</span></td></tr><tr><td>厦门</td><td class="num">5</td><td><span class="chip" style="background:#16a34a">Normal: 1</span> <span class="chip" style="background:#f97316">Minor: 2</span> <span class="chip" style="background:#dc2626">Major: 1</span> <span class="chip" style="background:#94a3b8">Unreachable: 1</span></td></tr></tbody>
+  </table>
+</div>
+
+<h2>门店 (Location) Top 10</h2>
+<div class="panel">
+  <table>
+    <thead><tr><th>门店</th><th class="num">设备数</th><th>严重级别分布</th></tr></thead>
+    <tbody><tr><td>天河区-Store-01</td><td class="num">20</td><td><span class="chip" style="background:#16a34a">Normal: 5</span> <span class="chip" style="background:#0ea5e9">Informational: 1</span> <span class="chip" style="background:#f97316">Minor: 7</span> <span class="chip" style="background:#94a3b8">Unreachable: 1</span> <span class="chip" style="background:#475569">Unmanaged: 6</span></td></tr><tr><td>工业园区-Store-01</td><td class="num">8</td><td><span class="chip" style="background:#16a34a">Normal: 2</span> <span class="chip" style="background:#eab308">Warning: 2</span> <span class="chip" style="background:#dc2626">Major: 1</span> <span class="chip" style="background:#94a3b8">Unreachable: 2</span> <span class="chip" style="background:#475569">Unmanaged: 1</span></td></tr><tr><td>静安区-Store-01</td><td class="num">8</td><td><span class="chip" style="background:#16a34a">Normal: 1</span> <span class="chip" style="background:#eab308">Warning: 1</span> <span class="chip" style="background:#f97316">Minor: 1</span> <span class="chip" style="background:#dc2626">Major: 4</span> <span class="chip" style="background:#475569">Unmanaged: 1</span></td></tr><tr><td>姑苏区-Store-01</td><td class="num">5</td><td><span class="chip" style="background:#16a34a">Normal: 1</span> <span class="chip" style="background:#f97316">Minor: 2</span> <span class="chip" style="background:#dc2626">Major: 1</span> <span class="chip" style="background:#475569">Unmanaged: 1</span></td></tr><tr><td>思明区-Store-01</td><td class="num">5</td><td><span class="chip" style="background:#16a34a">Normal: 1</span> <span class="chip" style="background:#f97316">Minor: 2</span> <span class="chip" style="background:#dc2626">Major: 1</span> <span class="chip" style="background:#94a3b8">Unreachable: 1</span></td></tr><tr><td>静安区-Store-02</td><td class="num">3</td><td><span class="chip" style="background:#16a34a">Normal: 1</span> <span class="chip" style="background:#475569">Unmanaged: 2</span></td></tr></tbody>
+  </table>
+</div>
+
+<h2>异常设备 (Unreachable / Unmanaged) — 前 15 台</h2>
+<div class="panel">
+  <table>
+    <thead><tr><th>ID</th><th>设备名</th><th>区域</th><th>门店</th><th>状态</th></tr></thead>
+    <tbody><tr><td>1732</td><td>MR46-9511</td><td>苏州</td><td>工业园区-Store-01</td><td><span class="chip" style="background:#94a3b8">Unreachable</span></td></tr><tr><td>1731</td><td>MR46_96A7</td><td>苏州</td><td>工业园区-Store-01</td><td><span class="chip" style="background:#94a3b8">Unreachable</span></td></tr><tr><td>1712</td><td>10.60.10.164</td><td>厦门</td><td>思明区-Store-01</td><td><span class="chip" style="background:#94a3b8">Unreachable</span></td></tr><tr><td>1682</td><td>Han_Windows</td><td>广州</td><td>天河区-Store-01</td><td><span class="chip" style="background:#94a3b8">Unreachable</span></td></tr><tr><td>1695</td><td>win2022</td><td>广州</td><td>天河区-Store-01</td><td><span class="chip" style="background:#475569">Unmanaged</span></td></tr><tr><td>1691</td><td>REDHAT 7.9</td><td>广州</td><td>天河区-Store-01</td><td><span class="chip" style="background:#475569">Unmanaged</span></td></tr><tr><td>1701</td><td>dc02-WIN2022</td><td>广州</td><td>天河区-Store-01</td><td><span class="chip" style="background:#475569">Unmanaged</span></td></tr><tr><td>1697</td><td>openmediava</td><td>苏州</td><td>姑苏区-Store-01</td><td><span class="chip" style="background:#475569">Unmanaged</span></td></tr><tr><td>1711</td><td>IPS-Scott</td><td>广州</td><td>天河区-Store-01</td><td><span class="chip" style="background:#475569">Unmanaged</span></td></tr><tr><td>1707</td><td>checkpoint R81.10</td><td>上海</td><td>静安区-Store-01</td><td><span class="chip" style="background:#475569">Unmanaged</span></td></tr><tr><td>1702</td><td>esxi6.5-2</td><td>上海</td><td>静安区-Store-02</td><td><span class="chip" style="background:#475569">Unmanaged</span></td></tr><tr><td>1699</td><td>esxi6.5-3</td><td>上海</td><td>静安区-Store-02</td><td><span class="chip" style="background:#475569">Unmanaged</span></td></tr><tr><td>1690</td><td>esxi6.5</td><td>广州</td><td>天河区-Store-01</td><td><span class="chip" style="background:#475569">Unmanaged</span></td></tr><tr><td>1685</td><td>Veeam</td><td>广州</td><td>天河区-Store-01</td><td><span class="chip" style="background:#475569">Unmanaged</span></td></tr><tr><td>1729</td><td>LCN_SZ_GSC_FW</td><td>苏州</td><td>工业园区-Store-01</td><td><span class="chip" style="background:#475569">Unmanaged</span></td></tr></tbody>
+  </table>
+</div>
+
+<h2>优化建议 (按优先级)</h2>
+
+<div class="summary">
+  <h3>执行摘要</h3>
+  <ol>
+    <li><span class="impact">P0 —</span> 广州天河区-Store-01 一店 20 台设备中 14 台异常 (70%)，建议本周内驻场 Site Survey。</li>
+    <li><span class="impact">P1 —</span> 11 台 Unmanaged 设备中含 3 台 ESXi + 1 台 Check Point 防火墙 + 1 台 Veeam 备份，属于关键基础设施未监控，存在合规与安全盲区。</li>
+    <li><span class="impact">P1 —</span> 苏州工业园区-Store-01 同门店 2 台 Meraki AP (MR46) 同时 Unreachable，指向门店交换机或上行链路问题。</li>
+    <li><span class="impact">P2 —</span> 7 台 Major 设备中 4 台集中于上海静安区-Store-01，需排查区域 NOC / 上行链路。</li>
+    <li><span class="impact">P2 —</span> 24h 仅 1 条 Informational 告警，告警链路疑似失效或阈值过严，建议做链路演练。</li>
+    <li><span class="impact">P3 —</span> SSL 监测仅覆盖 2 台设备，建议扩展至全部面向公网的 Web/邮件/API 设备。</li>
+  </ol>
+</div>
+
+<div class="rec">
+  <h3><span class="pri p1">P1</span>Unmanaged 关键基础设施纳管 / 清理</h3>
+  <div class="meta">影响范围: 11 台设备 · 涉及区域: 广州(6) / 上海(3) / 苏州(2)</div>
+  <ul>
+    <li><b>必须纳管</b>：<code>checkpoint R81.10</code> (上海静安)、<code>esxi6.5/-2/-3</code> (上海静安+广州天河)、<code>Veeam</code> (广州天河) — 防火墙/虚拟化/备份三类关键组件当前零监控，存在重大合规风险。</li>
+    <li><b>建议纳管</b>：<code>REDHAT 7.9</code>、<code>win2022</code>、<code>dc02-WIN2022</code>、<code>openmediava</code>、<code>IPS-Scott</code> — 标准 Linux/Windows 服务器，补齐 Agent 后即可纳入监控。</li>
+    <li><b>评估清理</b>：若 Unmanaged 设备在 CMDB 中已下线但未删除，建议从 CMDB 移除以减少误报与运维噪声。</li>
+    <li><b>SLA 建议</b>：建立"Sev 8 设备月度复核"机制，由 NOC 团队每月导出清单并标注纳管/清理/保留。</li>
+  </ul>
+</div>
+
+<div class="rec">
+  <h3><span class="pri p1">P1</span>Unreachable 设备 2 小时内 Triage</h3>
+  <div class="meta">影响范围: 4 台设备 · 涉及门店: 苏州工业园(2) / 厦门思明(1) / 广州天河(1)</div>
+  <ul>
+    <li><b>苏州工业园区-Store-01</b>：2 台 MR46 AP (设备 ID 1731/1732) <b>同时</b> 失联 — 高度怀疑门店核心交换机或 ISP 上行故障，而非 AP 自身。优先远程登录门店交换机检查端口状态。</li>
+    <li><b>厦门思明区-Store-01</b>：<code>10.60.10.164</code> (设备 ID 1712) Unreachable — 检查该主机 Agent 服务是否存活 (`/Api/Nms/Devices/{id}/DeviceActionStatus`)。</li>
+    <li><b>广州天河区-Store-01</b>：<code>Han_Windows</code> (设备 ID 1682) Unreachable — 建议同时复核该门店的 Watchguard/防火墙策略。</li>
+    <li><b>流程改进</b>：把"Sev 7 触发 → 自动创建 Sev 4 工单 → 2 小时响应"写进 Runbook，避免静默失联。</li>
+  </ul>
+</div>
+
+<div class="rec">
+  <h3><span class="pri p2">P2</span>Major / Minor 设备聚焦分析</h3>
+  <div class="meta">影响范围: 7 Major + 12 Minor · 涉及门店: 上海静安(5) / 广州天河(7)</div>
+  <ul>
+    <li><b>上海静安区-Store-01</b>：4 Major + 1 Minor，集中在该门店。调用 <code>GET /Api/Nms/Customers/ciscoinnovation1/DeviceStatus</code> 过滤 <code>regionId=41 locationId=55</code> 拉取明细。</li>
+    <li><b>广州天河区-Store-01</b>：7 Minor (占全部 Minor 的 58%)，需对该门店做 CPU/内存/接口错误率/温度的批量趋势分析，定位共性根因。</li>
+    <li><b>工具建议</b>：批量调用 <code>POST /Api/Nms/Customers/{customerTag}/DeviceStatus</code> (若可用) 或直接用 GrafanaNmsStatistics 拉 7 天 P95 指标做对比。</li>
+    <li><b>阈值复核</b>：连续 7 天 Minor 的设备建议把阈值上调 10–15%，避免长期噪声告警；突发的 Minor 则需人工复核。</li>
+  </ul>
+</div>
+
+<div class="rec">
+  <h3><span class="pri p2">P2</span>告警链路健康度排查</h3>
+  <div class="meta">影响范围: 全租户 · 24h 告警: 1 条 Informational</div>
+  <ul>
+    <li>在 7 台 Major + 12 Minor 设备并存的情况下，24 小时仅 1 条 Informational 进入告警队列，<b>告警通道疑似失效或被静默</b>。建议立即检查 <code>GET /Api/Nms/Customers/ciscoinnovation1/AlertNotification</code> 与 Notification Profile。</li>
+    <li><b>演练动作</b>：主动创建一条测试告警 (<code>POST /Api/Nms/Alerts</code>) 验证端到端邮件/Teams/SMS 通道。</li>
+    <li><b>阈值复盘</b>：对照 Major/Minor 设备数量与告警量，疑似存在阈值过严或被 Quiet Hours 误屏蔽。</li>
+  </ul>
+</div>
+
+<div class="rec">
+  <h3><span class="pri p3">P3</span>SSL 监测覆盖扩展</h3>
+  <div class="meta">影响范围: 当前 2 台设备 · 建议扩展至全公网面向服务</div>
+  <ul>
+    <li>当前 SSL 监测仅覆盖 <code>www.logicalisservice.com</code> 与另 1 台设备，<b>不足以覆盖</b>广州天河区暴露的 Check Point / IPS 等边界设备。</li>
+    <li>建议把以下设备加入 SSL 监测清单：所有面向公网的 Web、邮件 (SMTP/IMAPS)、API 网关、VPN 入口。</li>
+    <li><b>基线配置</b>：禁用 TLS 1.0/1.1，仅启用 TLS 1.2/1.3；对历史采集样本做 Cipher 强度审计 (RSA ≥ 2048bit，禁用 RC4/3DES/MD5)。</li>
+    <li><b>自动化</b>：配置证书过期前 30/15/7/1 天分级告警，避免证书过期导致服务中断。</li>
+  </ul>
+</div>
+
+<div class="rec">
+  <h3><span class="pri p3">P3</span>建立"门店健康评分卡"</h3>
+  <div class="meta">影响范围: 全部 6 个门店 · 输出: 月度趋势报告</div>
+  <ul>
+    <li>基于本次报告数据，建议每店输出月度评分卡：健康率 (Normal/Total)、平均 MTTR、告警密度、Unmanaged 比例四项。</li>
+    <li><b>当前门店健康率排名</b> (按 Normal% 估算)：
+      <ul>
+        <li>厦门思明区-Store-01：20% (1/5)</li>
+        <li>广州天河区-Store-01：25% (5/20)</li>
+        <li>苏州姑苏区-Store-01：20% (1/5)</li>
+        <li>苏州工业园区-Store-01：25% (2/8)</li>
+        <li>上海静安区-Store-01：12.5% (1/8) <b>← 最差</b></li>
+        <li>上海静安区-Store-02：33% (1/3)</li>
+      </ul>
+    </li>
+    <li><b>数据采集自动化</b>：把 <code>RegionStatusSummary</code> + <code>LocationStatusSummary</code> 接入每日定时任务，结果推送到 BI 看板。</li>
+  </ul>
+</div>
+
+<div class="footer">Generated by Claude · API: demo.logicalisservice.com · CustomerTag: ciscoinnovation1 · 建议基于最近一次完整采集数据</div>
+</body>
+</html>

@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT运维服务计费表</title>
+    <style>
+        :root {
+            --primary-dark: #1a237e;
+            --primary: #3f51b5;
+            --primary-light: #5c6bc0;
+            --bg: #f4f7fc;
+            --header-bg: #e8eaf6;
+            --line: #ddd;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background-color: var(--bg);
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            font-size: 14px;
+        }
+        .page {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            border-radius: 6px;
+        }
+        h1 {
+            text-align: center;
+            color: var(--primary-dark);
+            margin: 0 0 6px 0;
+            font-size: 1.8em;
+        }
+        .subtitle {
+            text-align: center;
+            color: var(--primary-light);
+            font-size: 0.9em;
+            margin-bottom: 22px;
+        }
+        .info-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            background: var(--header-bg);
+            padding: 14px 16px;
+            border-radius: 6px;
+            margin-bottom: 18px;
+            border-left: 4px solid var(--primary);
+        }
+        .info-bar label {
+            display: flex;
+            flex-direction: column;
+            font-size: 0.8em;
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+        .info-bar input, .info-bar select {
+            margin-top: 4px;
+            padding: 6px 8px;
+            border: 1px solid #b0bec5;
+            border-radius: 4px;
+            font-size: 0.95em;
+            font-family: inherit;
+            background: #fff;
+        }
+        .info-bar input:focus, .info-bar select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(63,81,181,0.15);
+        }
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 14px 0;
+        }
+        button {
+            padding: 7px 14px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-family: inherit;
+            background: var(--primary);
+            color: #fff;
+            transition: background 0.15s;
+        }
+        button:hover { background: var(--primary-dark); }
+        button.ghost { background: #fff; color: var(--primary); border: 1px solid var(--primary); }
+        button.ghost:hover { background: var(--header-bg); }
+        button.danger { background: #fff; color: #c62828; border: 1px solid #ef9a9a; padding: 3px 8px; font-size: 0.8em; }
+        button.danger:hover { background: #ffebee; }
+        table { width: 100%; border-collapse: collapse; }
+        .bill-table {
+            border: 1px solid var(--line);
+            font-size: 0.92em;
+        }
+        .bill-table th, .bill-table td {
+            border: 1px solid var(--line);
+            padding: 8px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .bill-table thead th {
+            background: var(--primary);
+            color: #fff;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+        .bill-table tbody tr:hover { background: #f5f7ff; }
+        .bill-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+        .bill-table td.calc {
+            background: #fafbff;
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+        .bill-table td.calc.strong {
+            background: var(--header-bg);
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
+        .bill-table td input, .bill-table td select {
+            width: 100%;
+            padding: 5px 6px;
+            border: 1px solid transparent;
+            border-radius: 3px;
+            font-family: inherit;
+            font-size: 0.95em;
+            background: transparent;
+            text-align: center;
+            cursor: pointer;
+        }
+        .bill-table td input:focus, .bill-table td select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 2px rgba(63,81,181,0.1);
+        }
+        .bill-table td input[type=number] { text-align: right; cursor: text; }
+        .bill-table .empty {
+            color: #999;
+            font-style: italic;
+            padding: 28px;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 18px;
+            margin-top: 18px;
+        }
+        .panel {
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .panel-title {
+            background: var(--primary);
+            color: #fff;
+            padding: 8px 14px;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+        .panel-body { padding: 0; }
+        .panel-body table { width: 100%; border-collapse: collapse; }
+        .panel-body th, .panel-body td {
+            padding: 7px 12px;
+            border-bottom: 1px solid var(--line);
+            font-size: 0.92em;
+        }
+        .panel-body thead th {
+            background: var(--header-bg);
+            color: var(--primary-dark);
+            text-align: left;
+            font-weight: 600;
+        }
+        .panel-body td.num { text-align: right; font-variant-numeric: tabular-nums; }
+        .totals td { padding: 9px 14px; font-size: 0.95em; }
+        .totals td:first-child { color: #555; }
+        .totals td:last-child { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+        .totals .negative { color: #c62828; }
+        .totals tr.final td {
+            background: var(--primary-dark);
+            color: #fff;
+            font-size: 1.05em;
+            font-weight: 700;
+        }
+        .totals tr.final td.negative { color: #ffab91; }
+        .sign-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-top: 28px;
+            padding-top: 18px;
+            border-top: 2px dashed var(--line);
+            font-size: 0.9em;
+            color: #555;
+        }
+        .formula-note {
+            background: #fff8e1;
+            border-left: 3px solid #ffb300;
+            padding: 10px 14px;
+            margin-top: 16px;
+            font-size: 0.82em;
+            color: #5d4037;
+            border-radius: 4px;
+        }
+        .formula-note strong { color: #e65100; }
+        .type-manager {
+            margin-top: 18px;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            overflow: hidden;
+            background: #fff;
+        }
+        .type-manager > summary {
+            background: var(--header-bg);
+            color: var(--primary-dark);
+            padding: 11px 14px;
+            cursor: pointer;
+            font-weight: 600;
+            list-style: none;
+            user-select: none;
+        }
+        .type-manager > summary::-webkit-details-marker { display: none; }
+        .type-manager > summary::before {
+            content: '▸';
+            display: inline-block;
+            margin-right: 8px;
+            transition: transform 0.2s;
+        }
+        .type-manager[open] > summary::before { transform: rotate(90deg); }
+        .type-manager-body { padding: 14px 16px; max-height: 420px; overflow-y: auto; }
+        .tm-cat { margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px dashed var(--line); }
+        .tm-cat:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .tm-cat-name { font-weight: 600; color: var(--primary-dark); margin-bottom: 8px; }
+        .tm-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; align-items: center; min-height: 24px; }
+        .tm-tag {
+            display: inline-flex; align-items: center;
+            background: #e8eaf6; color: var(--primary-dark);
+            padding: 4px 4px 4px 10px; border-radius: 14px;
+            font-size: 0.85em; line-height: 1.2;
+        }
+        .tm-tag .x, .tm-tag .e {
+            margin-left: 4px; cursor: pointer; padding: 0 6px;
+            border-radius: 50%; font-weight: bold; line-height: 1;
+        }
+        .tm-tag .e { color: var(--primary); font-size: 0.9em; }
+        .tm-tag .x { color: #999; }
+        .tm-tag .x:hover { background: #ffcdd2; color: #c62828; }
+        .tm-tag .e:hover { background: #c5cae9; }
+        .tm-tag.custom { background: #fff3e0; color: #e65100; }
+        .tm-empty { color: #999; font-style: italic; font-size: 0.85em; }
+        .tm-add { display: flex; gap: 6px; }
+        .tm-add input {
+            flex: 1; padding: 5px 9px;
+            border: 1px solid var(--line); border-radius: 4px;
+            font-family: inherit; font-size: 0.9em;
+        }
+        .tm-add input:focus { outline: none; border-color: var(--primary); }
+        .tm-add button { padding: 5px 12px; font-size: 0.85em; }
+        @media print {
+            body { background: #fff; padding: 0; font-size: 12px; }
+            .page { box-shadow: none; padding: 12px; max-width: 100%; }
+            .actions, .formula-note { display: none; }
+            .bill-table thead th { position: static; }
+            button.danger { display: none; }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+
+    <h1>IT运维服务计费表</h1>
+    <div class="subtitle">基于ITIL 4服务目录 · 大类计费</div>
+
+    <div class="info-bar">
+        <label>客户名称<input type="text" id="customer" placeholder="如：XX控股"></label>
+        <label>合同编号<input type="text" id="contractNo" placeholder="SVC-2026-001"></label>
+        <label>服务起始<input type="date" id="startDate"></label>
+        <label>服务截止<input type="date" id="endDate"></label>
+        <label>默认服务月数<input type="number" id="months" value="12" min="1"></label>
+        <label>折扣率 (%)<input type="number" id="discountRate" value="0" step="0.1" min="0" max="100"></label>
+        <label>增值税率 (%)<input type="number" id="taxRate" value="6" step="0.1" min="0"></label>
+        <label>币种
+            <select id="currency">
+                <option value="¥">人民币 ¥</option>
+                <option value="$">美元 $</option>
+            </select>
+        </label>
+    </div>
+
+    <table class="bill-table">
+        <thead>
+            <tr>
+                <th style="width:50px">序号</th>
+                <th style="width:130px">设备大类</th>
+                <th style="width:180px">设备类型 / 平台</th>
+                <th style="width:100px">服务级别</th>
+                <th style="width:70px">数量</th>
+                <th style="width:110px">单价(/月)</th>
+                <th style="width:130px">月费小计</th>
+                <th style="width:80px">服务月数</th>
+                <th style="width:140px">小计金额</th>
+                <th style="width:60px">操作</th>
+            </tr>
+        </thead>
+        <tbody id="billBody"></tbody>
+    </table>
+
+    <div class="actions">
+        <button onclick="addRow()">+ 添加明细</button>
+        <span style="flex:1"></span>
+        <button class="ghost" onclick="exportCSV()">导出CSV</button>
+        <button class="ghost" onclick="window.print()">打印</button>
+    </div>
+
+    <details class="type-manager">
+        <summary>类型库管理 — 查看 / 编辑 / 添加 / 删除各设备大类的类型（类型列也可直接在明细行输入新值自动入库）</summary>
+        <div class="type-manager-body" id="typeManagerBody"></div>
+    </details>
+
+    <div class="summary-grid">
+        <div class="panel">
+            <div class="panel-title">按设备大类汇总</div>
+            <div class="panel-body">
+                <table>
+                    <thead><tr><th>设备大类</th><th style="text-align:right">数量</th><th style="text-align:right">月费小计</th><th style="text-align:right">小计金额</th></tr></thead>
+                    <tbody id="categoryBody"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="panel-title">费用合计</div>
+            <div class="panel-body">
+                <table class="totals">
+                    <tbody>
+                        <tr><td>合计金额</td><td id="grandTotal">¥0.00</td></tr>
+                        <tr><td>折扣 (<span id="discountLabel">0</span>%)</td><td id="discountAmt" class="negative">-¥0.00</td></tr>
+                        <tr><td>税前金额</td><td id="pretax">¥0.00</td></tr>
+                        <tr><td>增值税 (<span id="taxLabel">6</span>%)</td><td id="taxAmt">¥0.00</td></tr>
+                        <tr class="final"><td>含税总计</td><td id="finalTotal">¥0.00</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="formula-note">
+        <strong>计算公式（联动）：</strong>
+        月费小计 = 数量 × 单价　|　小计金额 = 数量 × 单价 × 服务月数　|　折扣 = 合计 × 折扣率　|　税前 = 合计 - 折扣　|　税额 = 税前 × 税率　|　含税总计 = 税前 + 税额
+        <br>修改任意「数量 / 单价 / 服务月数 / 折扣率 / 税率 / 大类」都会实时刷新所有汇总与合计。
+    </div>
+
+    <div class="sign-row">
+        <div>客户签收：__________________</div>
+        <div>服务方签章：__________________</div>
+        <div>日期：__________________</div>
+    </div>
+
+</div>
+
+<script>
+let rows = [];
+let nextId = 1;
+let currency = '¥';
+
+const PRESET_TYPES = {
+    '网络设备': ['核心交换机', '汇聚交换机', '接入交换机', '路由器', '负载均衡', 'VPN网关', '无线AP', '无线控制器'],
+    '安全设备': ['下一代防火墙 NGFW', '传统防火墙', 'WAF', 'IPS / IDS', '抗DDoS', '上网行为管理', '堡垒机', '日志审计'],
+    '数据库': ['Oracle', 'MySQL', 'PostgreSQL', 'SQL Server', 'MongoDB', 'Redis', 'Elasticsearch', '达梦 DM', '人大金仓', 'TDSQL'],
+    '虚拟化平台': ['VMware vSphere', 'Hyper-V', 'KVM', 'OpenStack', 'XenServer', 'Kubernetes / K8s', 'Docker'],
+    '物理服务器': ['x86 服务器', '小型机', 'GPU 服务器', '刀片服务器', '塔式服务器'],
+    '存储': ['NAS', 'FC-SAN', 'IP-SAN', '分布式存储', '对象存储', '备份一体机', '磁带库'],
+    '操作系统': ['Windows Server', 'RHEL', 'CentOS / Rocky', 'Ubuntu', 'SUSE', '麒麟', '统信 UOS', '中科方德'],
+    '中间件': ['WebLogic', 'WebSphere', 'Tomcat', 'JBoss', 'Nginx', 'Apache', 'RabbitMQ', 'Kafka', 'Zookeeper'],
+    '业务应用': ['ERP (SAP/Oracle)', 'OA / 协同', '邮件系统', '财务系统', 'HR 系统', '自研核心系统', 'CRM'],
+    '备份系统': ['Veeam', 'Commvault', 'NetBackup', '爱数备份', '鼎甲 DBackup'],
+    '监控系统': ['Zabbix', 'Prometheus', 'Grafana', 'Nagios', '听云', '云智慧'],
+    '容灾双活': ['数据库双活', '应用双活', 'OGG / DG 同步', '存储双活'],
+    '公有云': ['阿里云', '华为云', '腾讯云', 'AWS', 'Azure', '京东云'],
+    '桌面终端': ['桌面云 VDI', '终端管控', '打印机', '扫描枪'],
+    '机房基础': ['UPS', '精密空调', '动环监控', '机房专线', 'KVM 切换器', '机柜 PDU']
+};
+
+let CATEGORY_MAP = Object.fromEntries(Object.entries(PRESET_TYPES).map(([k, v]) => [k, [...v]]));
+
+const SERVICE_LEVELS = ['5x8', '7x24', '5x8 现场', '7x24 现场', '驻场'];
+
+const DEFAULT_LEVEL = {
+    '网络设备': '7x24', '安全设备': '7x24', '数据库': '7x24', '虚拟化平台': '7x24',
+    '物理服务器': '7x24', '存储': '7x24', '操作系统': '5x8', '中间件': '7x24',
+    '业务应用': '7x24', '备份系统': '5x8', '监控系统': '5x8', '容灾双活': '7x24',
+    '公有云': '7x24', '桌面终端': '5x8', '机房基础': '7x24'
+};
+
+const DEFAULT_PRICE = {
+    'Oracle': 1500, 'MySQL': 500, 'PostgreSQL': 500, 'SQL Server': 800,
+    'MongoDB': 600, 'Redis': 300, 'Elasticsearch': 700,
+    '达梦 DM': 1200, '人大金仓': 1200, 'TDSQL': 1500,
+    'VMware vSphere': 600, 'Hyper-V': 400, 'KVM': 300, 'OpenStack': 1000,
+    'Kubernetes / K8s': 1500, 'Docker': 200, 'XenServer': 400,
+    'x86 服务器': 100, '小型机': 2000, 'GPU 服务器': 500, '刀片服务器': 200, '塔式服务器': 80,
+    '核心交换机': 800, '汇聚交换机': 300, '接入交换机': 50, '路由器': 600,
+    '负载均衡': 1000, 'VPN网关': 500, '无线AP': 30, '无线控制器': 800,
+    '下一代防火墙 NGFW': 1200, '传统防火墙': 400, 'WAF': 800, 'IPS / IDS': 600,
+    '抗DDoS': 1500, '上网行为管理': 500, '堡垒机': 600, '日志审计': 800,
+    'NAS': 400, 'FC-SAN': 1500, 'IP-SAN': 800, '分布式存储': 2000,
+    '对象存储': 300, '备份一体机': 600, '磁带库': 400,
+    'Windows Server': 60, 'RHEL': 200, 'CentOS / Rocky': 50, 'Ubuntu': 50,
+    'SUSE': 200, '麒麟': 150, '统信 UOS': 150, '中科方德': 150,
+    'WebLogic': 800, 'WebSphere': 1000, 'Tomcat': 200, 'JBoss': 400,
+    'Nginx': 100, 'Apache': 100, 'RabbitMQ': 400, 'Kafka': 600, 'Zookeeper': 300,
+    'ERP (SAP/Oracle)': 3000, 'OA / 协同': 600, '邮件系统': 400, '财务系统': 1000,
+    'HR 系统': 500, '自研核心系统': 1500, 'CRM': 600,
+    'Veeam': 400, 'Commvault': 800, 'NetBackup': 600, '爱数备份': 300, '鼎甲 DBackup': 300,
+    'Zabbix': 200, 'Prometheus': 300, 'Grafana': 100, 'Nagios': 200, '听云': 1500, '云智慧': 1500,
+    '数据库双活': 3000, '应用双活': 2500, 'OGG / DG 同步': 1500, '存储双活': 2000,
+    '阿里云': 200, '华为云': 200, '腾讯云': 200, 'AWS': 300, 'Azure': 300, '京东云': 200,
+    '桌面云 VDI': 80, '终端管控': 30, '打印机': 20, '扫描枪': 10,
+    'UPS': 200, '精密空调': 300, '动环监控': 500, '机房专线': 1000, 'KVM 切换器': 50, '机柜 PDU': 30
+};
+
+const CATEGORIES = Object.keys(CATEGORY_MAP);
+
+function num(v) { v = parseFloat(v); return isFinite(v) ? v : 0; }
+function fmt(n) {
+    if (!isFinite(n)) n = 0;
+    return currency + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+function fmtNeg(n) { return '-' + fmt(Math.abs(n)); }
+function getMonths(row) {
+    if (row.months !== null && row.months !== '' && row.months !== undefined) return num(row.months);
+    return num(document.getElementById('months').value) || 0;
+}
+function rowCalc(row) {
+    const qty = num(row.qty);
+    const price = num(row.price);
+    const months = getMonths(row);
+    return { monthly: qty * price, total: qty * price * months };
+}
+
+function addRow(prefill = {}) {
+    const category = prefill.category || '数据库';
+    const types = CATEGORY_MAP[category] || [];
+    const type = prefill.type || types[0] || '';
+    rows.push({
+        id: nextId++,
+        category,
+        type,
+        level: prefill.level || DEFAULT_LEVEL[category] || '5x8',
+        qty: prefill.qty ?? 1,
+        price: prefill.price ?? (DEFAULT_PRICE[type] ?? 0),
+        priceManual: prefill.price != null,
+        months: prefill.months ?? null
+    });
+    render();
+}
+
+function deleteRow(id) {
+    rows = rows.filter(r => r.id !== id);
+    render();
+}
+
+function escapeAttr(v) { return String(v == null ? '' : v).replace(/"/g,'&quot;'); }
+function escapeHtml(v) { return String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function render() {
+    const body = document.getElementById('billBody');
+    if (rows.length === 0) {
+        body.innerHTML = '<tr><td colspan="10" class="empty">暂无明细，点击「+ 添加明细」开始录入</td></tr>';
+    } else {
+        body.innerHTML = rows.map((r, i) => {
+            const c = rowCalc(r);
+            const monthsVal = (r.months === null || r.months === undefined) ? '' : r.months;
+            const typeOptions = (CATEGORY_MAP[r.category] || []).map(t =>
+                `<option value="${escapeAttr(t)}">`
+            ).join('');
+            return `
+            <tr data-id="${r.id}">
+                <td class="num">${i+1}</td>
+                <td><select onchange="updateRow(${r.id},'category',this.value)">
+                    ${CATEGORIES.map(cat => `<option value="${escapeAttr(cat)}" ${cat===r.category?'selected':''}>${cat}</option>`).join('')}
+                </select></td>
+                <td><input type="text" list="dl_${r.id}" value="${escapeAttr(r.type)}"
+                    onchange="updateRow(${r.id},'type',this.value)"
+                    placeholder="选择或输入新类型">
+                    <datalist id="dl_${r.id}">${typeOptions}</datalist>
+                </td>
+                <td><select onchange="updateRow(${r.id},'level',this.value)">
+                    ${SERVICE_LEVELS.map(lv => `<option ${lv===r.level?'selected':''}>${lv}</option>`).join('')}
+                </select></td>
+                <td><input type="number" min="0" step="1" value="${r.qty}" oninput="updateRow(${r.id},'qty',this.value)"></td>
+                <td><input type="number" min="0" step="0.01" value="${r.price}" oninput="updateRow(${r.id},'price',this.value)"></td>
+                <td class="num calc" data-field="monthly">${fmt(c.monthly)}</td>
+                <td><input type="number" min="0" step="1" value="${monthsVal}" placeholder="默认" oninput="updateRow(${r.id},'months',this.value)"></td>
+                <td class="num calc strong" data-field="total">${fmt(c.total)}</td>
+                <td><button class="danger" onclick="deleteRow(${r.id})">删除</button></td>
+            </tr>`;
+        }).join('');
+    }
+    renderSummary();
+    renderTypeManager();
+}
+
+function updateRow(id, field, value) {
+    const row = rows.find(r => r.id === id);
+    if (!row) return;
+
+    if (field === 'category') {
+        row.category = value;
+        const types = CATEGORY_MAP[value] || [];
+        row.type = types[0] || '';
+        row.level = DEFAULT_LEVEL[value] || row.level || '5x8';
+        if (!row.priceManual) row.price = DEFAULT_PRICE[row.type] ?? row.price;
+        render();
+        return;
+    }
+
+    if (field === 'type') {
+        const newType = (value || '').trim();
+        if (newType) {
+            if (!CATEGORY_MAP[row.category]) CATEGORY_MAP[row.category] = [];
+            if (!CATEGORY_MAP[row.category].includes(newType)) {
+                CATEGORY_MAP[row.category].push(newType);
+            }
+        }
+        row.type = newType;
+        if (!row.priceManual && newType) row.price = DEFAULT_PRICE[newType] ?? row.price;
+        render();
+        return;
+    }
+
+    if (field === 'qty' || field === 'price') {
+        row[field] = value === '' ? 0 : num(value);
+        if (field === 'price') row.priceManual = true;
+    } else if (field === 'months') {
+        row.months = value === '' ? null : num(value);
+    } else {
+        row[field] = value;
+    }
+
+    const tr = document.querySelector(`tr[data-id="${id}"]`);
+    if (tr) {
+        const c = rowCalc(row);
+        tr.querySelector('[data-field="monthly"]').textContent = fmt(c.monthly);
+        tr.querySelector('[data-field="total"]').textContent = fmt(c.total);
+        const priceInput = tr.querySelector('input[type="number"][step="0.01"]');
+        if (priceInput && field === 'price') priceInput.value = row.price;
+    }
+    renderSummary();
+}
+
+function renderSummary() {
+    const catMap = {};
+    rows.forEach(r => {
+        const c = rowCalc(r);
+        if (!catMap[r.category]) catMap[r.category] = { monthly: 0, total: 0, qty: 0 };
+        catMap[r.category].monthly += c.monthly;
+        catMap[r.category].total += c.total;
+        catMap[r.category].qty += num(r.qty);
+    });
+
+    const catBody = document.getElementById('categoryBody');
+    if (Object.keys(catMap).length === 0) {
+        catBody.innerHTML = '<tr><td colspan="4" class="empty">暂无明细</td></tr>';
+    } else {
+        catBody.innerHTML = CATEGORIES.filter(cat => catMap[cat]).map(cat => {
+            const d = catMap[cat];
+            return `<tr>
+                <td>${cat}</td>
+                <td class="num">${d.qty}</td>
+                <td class="num">${fmt(d.monthly)}</td>
+                <td class="num" style="font-weight:600;color:var(--primary-dark)">${fmt(d.total)}</td>
+            </tr>`;
+        }).join('');
+    }
+
+    const grand = rows.reduce((s, r) => s + rowCalc(r).total, 0);
+    const discRate = num(document.getElementById('discountRate').value);
+    const taxRate = num(document.getElementById('taxRate').value);
+    const discount = grand * discRate / 100;
+    const pretax = grand - discount;
+    const tax = pretax * taxRate / 100;
+    const final = pretax + tax;
+
+    document.getElementById('discountLabel').textContent = discRate;
+    document.getElementById('taxLabel').textContent = taxRate;
+    document.getElementById('grandTotal').textContent = fmt(grand);
+    document.getElementById('discountAmt').textContent = fmtNeg(discount);
+    document.getElementById('pretax').textContent = fmt(pretax);
+    document.getElementById('taxAmt').textContent = fmt(tax);
+    document.getElementById('finalTotal').textContent = fmt(final);
+}
+
+function isPreset(category, type) {
+    return (PRESET_TYPES[category] || []).includes(type);
+}
+
+function renderTypeManager() {
+    const body = document.getElementById('typeManagerBody');
+    if (!body) return;
+    body.innerHTML = CATEGORIES.map(cat => {
+        const types = CATEGORY_MAP[cat] || [];
+        const tags = types.map(t => {
+            const cls = isPreset(cat, t) ? 'tm-tag' : 'tm-tag custom';
+            const title = isPreset(cat, t) ? '预设类型' : '自定义类型';
+            return `<span class="${cls}" title="${title}">
+                <span class="t">${escapeHtml(t)}</span>
+                <span class="e" data-act="edit" data-cat="${escapeAttr(cat)}" data-type="${escapeAttr(t)}" title="编辑">✎</span>
+                <span class="x" data-act="del" data-cat="${escapeAttr(cat)}" data-type="${escapeAttr(t)}" title="删除">×</span>
+            </span>`;
+        }).join('');
+        const empty = types.length === 0
+            ? '<span class="tm-empty">暂无类型</span>'
+            : '';
+        return `
+        <div class="tm-cat">
+            <div class="tm-cat-name">${escapeHtml(cat)} <span style="font-weight:normal;color:#999;font-size:0.85em">(${types.length})</span></div>
+            <div class="tm-tags">${tags}${empty}</div>
+            <div class="tm-add">
+                <input type="text" placeholder="输入新类型后回车添加" data-add-for="${escapeAttr(cat)}">
+                <button class="ghost" data-add-btn-for="${escapeAttr(cat)}">+ 添加</button>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+document.getElementById('typeManagerBody').addEventListener('click', e => {
+    const editBtn = e.target.closest('[data-act="edit"]');
+    if (editBtn) { editType(editBtn.dataset.cat, editBtn.dataset.type); return; }
+    const delBtn = e.target.closest('[data-act="del"]');
+    if (delBtn) { deleteType(delBtn.dataset.cat, delBtn.dataset.type); return; }
+    const addBtn = e.target.closest('[data-add-btn-for]');
+    if (addBtn) {
+        const cat = addBtn.dataset.addBtnFor;
+        const input = addBtn.previousElementSibling;
+        const v = input.value.trim();
+        if (v) { addType(cat, v); input.value = ''; }
+    }
+});
+
+document.getElementById('typeManagerBody').addEventListener('keydown', e => {
+    if (e.key !== 'Enter') return;
+    if (e.target.matches('[data-add-for]')) {
+        e.preventDefault();
+        const cat = e.target.dataset.addFor;
+        const v = e.target.value.trim();
+        if (v) { addType(cat, v); e.target.value = ''; }
+    }
+});
+
+function addType(category, type) {
+    type = (type || '').trim();
+    if (!type) return;
+    if (!CATEGORY_MAP[category]) CATEGORY_MAP[category] = [];
+    if (CATEGORY_MAP[category].includes(type)) {
+        alert(`「${category}」下已存在类型「${type}」`);
+        return;
+    }
+    CATEGORY_MAP[category].push(type);
+    render();
+}
+
+function deleteType(category, type) {
+    const inUse = rows.some(r => r.category === category && r.type === type);
+    const msg = inUse
+        ? `「${type}」当前正被某些明细行使用。\n删除后这些行仍保留该名称，但下拉中不再出现。\n确定删除？`
+        : `确定从「${category}」删除类型「${type}」？`;
+    if (!confirm(msg)) return;
+    CATEGORY_MAP[category] = CATEGORY_MAP[category].filter(t => t !== type);
+    delete DEFAULT_PRICE[type];
+    render();
+}
+
+function editType(category, oldType) {
+    const newType = prompt(`编辑「${category}」下的类型：`, oldType);
+    if (newType === null) return;
+    const trimmed = newType.trim();
+    if (!trimmed || trimmed === oldType) return;
+    if (CATEGORY_MAP[category].includes(trimmed)) {
+        alert(`「${category}」下已存在类型「${trimmed}」`);
+        return;
+    }
+    const idx = CATEGORY_MAP[category].indexOf(oldType);
+    CATEGORY_MAP[category][idx] = trimmed;
+    if (DEFAULT_PRICE[oldType] !== undefined) {
+        DEFAULT_PRICE[trimmed] = DEFAULT_PRICE[oldType];
+        delete DEFAULT_PRICE[oldType];
+    }
+    rows.forEach(r => { if (r.type === oldType) r.type = trimmed; });
+    render();
+}
+
+['months','discountRate','taxRate'].forEach(id => {
+    document.getElementById(id).addEventListener('input', renderSummary);
+});
+document.getElementById('currency').addEventListener('change', e => {
+    currency = e.target.value;
+    render();
+});
+
+function exportCSV() {
+    const headers = ['序号','设备大类','设备类型/平台','服务级别','数量','单价','月费小计','服务月数','小计金额'];
+    const lines = [headers.join(',')];
+    rows.forEach((r, i) => {
+        const c = rowCalc(r);
+        lines.push([i+1, r.category, r.type, r.level, r.qty, r.price, c.monthly.toFixed(2), getMonths(r), c.total.toFixed(2)].join(','));
+    });
+    const grand = rows.reduce((s, r) => s + rowCalc(r).total, 0);
+    const discRate = num(document.getElementById('discountRate').value);
+    const taxRate = num(document.getElementById('taxRate').value);
+    const discount = grand * discRate / 100;
+    const pretax = grand - discount;
+    const tax = pretax * taxRate / 100;
+    const final = pretax + tax;
+    lines.push(['','','','','','合计金额','','',grand.toFixed(2)]);
+    lines.push(['','','','','','折扣','','',(-discount).toFixed(2)]);
+    lines.push(['','','','','','税前金额','','',pretax.toFixed(2)]);
+    lines.push(['','','','','','增值税','','',tax.toFixed(2)]);
+    lines.push(['','','','','','含税总计','','',final.toFixed(2)]);
+
+    const blob = new Blob(['﻿' + lines.join('\n')], {type: 'text/csv;charset=utf-8;'});
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'IT运维服务计费表.csv';
+    link.click();
+}
+
+addRow({category:'数据库', type:'Oracle', qty:4, price:1500});
+</script>
+</body>
+</html>
