@@ -50,4 +50,4 @@ git push                         # 推送到 GitHub
 - **客户**：宜鼎 InnoDisk
 - **项目**：FY27 服务交付
 - **维护**：Richard
-- **仓库可见性**：Private
+- **仓库**：<https://github.com/leochen123dong/ithub-pricing-toolkit>（Private）
