@@ -317,6 +317,9 @@
     <div class="actions">
         <button onclick="addRow()">+ 添加明细</button>
         <span style="flex:1"></span>
+        <button class="ghost" onclick="exportData()">导出数据</button>
+        <button class="ghost" onclick="document.getElementById('importInput').click()">导入数据</button>
+        <input type="file" id="importInput" accept=".json,application/json" style="display:none">
         <button class="ghost" onclick="exportCSV()">导出CSV</button>
         <button class="ghost" onclick="window.print()">打印</button>
     </div>
@@ -356,6 +359,7 @@
         <strong>计算公式（联动）：</strong>
         月费小计 = 数量 × 单价　|　小计金额 = 数量 × 单价 × 服务月数　|　折扣 = 合计 × 折扣率　|　税前 = 合计 - 折扣　|　税额 = 税前 × 税率　|　含税总计 = 税前 + 税额
         <br>修改任意「数量 / 单价 / 服务月数 / 折扣率 / 税率 / 大类」都会实时刷新所有汇总与合计。
+        <br><strong style="color:#c62828">数据不自动保存：</strong>本工具为一次性会话（无服务端、无 localStorage）。关闭页面前请用「导出数据」保存为 JSON 文件，下次用「导入数据」恢复。
     </div>
 
     <div class="sign-row">
@@ -427,7 +431,7 @@ const DEFAULT_PRICE = {
     'UPS': 200, '精密空调': 300, '动环监控': 500, '机房专线': 1000, 'KVM 切换器': 50, '机柜 PDU': 30
 };
 
-const CATEGORIES = Object.keys(CATEGORY_MAP);
+let CATEGORIES = Object.keys(CATEGORY_MAP);
 
 function num(v) { v = parseFloat(v); return isFinite(v) ? v : 0; }
 function fmt(n) {
@@ -705,6 +709,86 @@ document.getElementById('currency').addEventListener('change', e => {
     currency = e.target.value;
     render();
 });
+
+document.getElementById('importInput').addEventListener('change', e => {
+    importData(e.target.files[0]);
+    e.target.value = '';
+});
+
+function exportData() {
+    const config = {
+        customer: document.getElementById('customer').value,
+        contractNo: document.getElementById('contractNo').value,
+        startDate: document.getElementById('startDate').value,
+        endDate: document.getElementById('endDate').value,
+        months: num(document.getElementById('months').value),
+        discountRate: num(document.getElementById('discountRate').value),
+        taxRate: num(document.getElementById('taxRate').value),
+        currency
+    };
+    const payload = {
+        version: '1.0',
+        exportedAt: new Date().toISOString(),
+        config,
+        rows,
+        categoryMap: CATEGORY_MAP
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json'});
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    const safeName = (config.customer || 'untitled').replace(/[^\w一-龥-]/g, '_').slice(0, 40) || 'untitled';
+    link.download = `${safeName}_${config.contractNo || 'noContract'}_${new Date().toISOString().slice(0,10)}.json`;
+    link.click();
+    URL.revokeObjectURL(link.href);
+}
+
+function importData(file) {
+    if (!file) return;
+    if (!confirm(`导入将覆盖当前所有明细（${rows.length} 行）与配置。继续？`)) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        try {
+            const data = JSON.parse(e.target.result);
+            if (!data.version || !Array.isArray(data.rows)) {
+                alert('文件格式不正确：缺少 version 字段或 rows 不是数组');
+                return;
+            }
+            if (data.config) {
+                const c = data.config;
+                document.getElementById('customer').value = c.customer || '';
+                document.getElementById('contractNo').value = c.contractNo || '';
+                document.getElementById('startDate').value = c.startDate || '';
+                document.getElementById('endDate').value = c.endDate || '';
+                document.getElementById('months').value = c.months || 12;
+                document.getElementById('discountRate').value = c.discountRate ?? 0;
+                document.getElementById('taxRate').value = c.taxRate ?? 6;
+                if (c.currency && (c.currency === '¥' || c.currency === '$')) {
+                    currency = c.currency;
+                    document.getElementById('currency').value = c.currency;
+                }
+            }
+            rows = data.rows.map(r => ({
+                id: nextId++,
+                category: r.category || '',
+                type: r.type || '',
+                level: r.level || '5x8',
+                qty: num(r.qty),
+                price: num(r.price),
+                months: r.months != null ? num(r.months) : null,
+                priceManual: !!r.priceManual
+            }));
+            if (data.categoryMap && typeof data.categoryMap === 'object') {
+                CATEGORY_MAP = data.categoryMap;
+                CATEGORIES = Object.keys(CATEGORY_MAP);
+            }
+            render();
+            alert(`导入成功：${rows.length} 行明细`);
+        } catch (err) {
+            alert('解析失败：' + err.message);
+        }
+    };
+    reader.readAsText(file);
+}
 
 function exportCSV() {
     const headers = ['序号','设备大类','设备类型/平台','服务级别','数量','单价','月费小计','服务月数','小计金额'];
