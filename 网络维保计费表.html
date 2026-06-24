@@ -325,7 +325,7 @@
     </div>
 
     <details class="type-manager">
-        <summary>类型库管理 — 查看 / 编辑 / 添加 / 删除各设备大类的类型（类型列也可直接在明细行输入新值自动入库）</summary>
+        <summary>类型库管理 — 查看 / 编辑 / 添加 / 删除各设备大类的类型（也可在明细行下拉中选择「➕ 添加新类型…」快速新增）</summary>
         <div class="type-manager-body" id="typeManagerBody"></div>
     </details>
 
@@ -483,20 +483,20 @@ function render() {
         body.innerHTML = rows.map((r, i) => {
             const c = rowCalc(r);
             const monthsVal = (r.months === null || r.months === undefined) ? '' : r.months;
-            const typeOptions = (CATEGORY_MAP[r.category] || []).map(t =>
-                `<option value="${escapeAttr(t)}">`
+            const typeList = CATEGORY_MAP[r.category] || [];
+            const typeOptions = typeList.map(t =>
+                `<option value="${escapeAttr(t)}" ${t === r.type ? 'selected' : ''}>${escapeHtml(t)}</option>`
             ).join('');
             return `
             <tr data-id="${r.id}">
                 <td class="num">${i+1}</td>
                 <td><select onchange="updateRow(${r.id},'category',this.value)">
-                    ${CATEGORIES.map(cat => `<option value="${escapeAttr(cat)}" ${cat===r.category?'selected':''}>${cat}</option>`).join('')}
+                    ${CATEGORIES.map(cat => `<option value="${escapeAttr(cat)}" ${cat===r.category?'selected':''}>${escapeHtml(cat)}</option>`).join('')}
                 </select></td>
-                <td><input type="text" list="dl_${r.id}" value="${escapeAttr(r.type)}"
-                    onchange="updateRow(${r.id},'type',this.value)"
-                    placeholder="选择或输入新类型">
-                    <datalist id="dl_${r.id}">${typeOptions}</datalist>
-                </td>
+                <td><select onchange="onTypeSelect(${r.id}, this)">
+                    ${typeOptions}
+                    <option value="__add__">➕ 添加新类型…</option>
+                </select></td>
                 <td><select onchange="updateRow(${r.id},'level',this.value)">
                     ${SERVICE_LEVELS.map(lv => `<option ${lv===r.level?'selected':''}>${lv}</option>`).join('')}
                 </select></td>
@@ -511,6 +511,31 @@ function render() {
     }
     renderSummary();
     renderTypeManager();
+}
+
+function onTypeSelect(id, selectEl) {
+    const value = selectEl.value;
+    if (value !== '__add__') {
+        updateRow(id, 'type', value);
+        return;
+    }
+    const row = rows.find(r => r.id === id);
+    if (!row) { render(); return; }
+    const cat = row.category;
+    const newType = prompt(`为「${cat}」添加新类型：`, '');
+    if (!newType || !newType.trim()) {
+        render();
+        return;
+    }
+    const trimmed = newType.trim();
+    if ((CATEGORY_MAP[cat] || []).includes(trimmed)) {
+        alert(`「${cat}」下已存在类型「${trimmed}」`);
+        updateRow(id, 'type', trimmed);
+        return;
+    }
+    if (!CATEGORY_MAP[cat]) CATEGORY_MAP[cat] = [];
+    CATEGORY_MAP[cat].push(trimmed);
+    updateRow(id, 'type', trimmed);
 }
 
 function updateRow(id, field, value) {
